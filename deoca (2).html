@@ -1,0 +1,464 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Định mức NEU - Hợp đồng Đèo Cả (Final)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        .bg-pattern { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 24px 24px; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen p-4 md:p-6 lg:p-8 bg-pattern">
+
+    <div class="max-w-[1500px] mx-auto space-y-6">
+        
+        <!-- HEADER -->
+        <div class="bg-slate-900 p-5 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between text-white border-b-4 border-blue-500">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 bg-blue-600 rounded-xl shadow-inner border border-blue-400/50">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">Trang Xử Lý Định Mức - Hợp Đồng Đèo Cả (Bản Cuối)</h1>
+                    <p class="text-sm text-blue-200 mt-1">Đã tích hợp kiểm toán theo Điều 2.3 & 5.4 của Hợp đồng Đèo Cả</p>
+                </div>
+            </div>
+            <div id="status-bar" class="mt-4 md:mt-0 px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors duration-300">
+                Đang phân tích dòng tiền...
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <!-- VÙNG 1: BÀN TRỘN THÔNG SỐ (MIXER) -->
+            <div class="xl:col-span-4 space-y-5">
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-100 px-5 py-4 border-b border-slate-200 flex justify-between items-center">
+                        <h2 class="text-base font-bold text-slate-800 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                            BÀN TRỘN HỆ SỐ
+                        </h2>
+                    </div>
+                    
+                    <div class="p-5 space-y-6 max-h-[800px] overflow-y-auto custom-scrollbar">
+                        
+                        <!-- Ràng buộc tổng -->
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 shadow-inner">
+                            <label class="block text-sm font-extrabold text-blue-900 mb-2 uppercase">Tổng doanh thu cố định (VNĐ)</label>
+                            <input type="text" id="inp-revenue" class="currency-input w-full px-4 py-2.5 bg-white border border-blue-300 rounded-lg font-black text-blue-700 text-xl text-right shadow-sm focus:ring-2 focus:ring-blue-500 outline-none" value="1.700.000.000" />
+                            <div class="mt-3 flex justify-between">
+                                <div class="w-[48%]">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Quy mô học viên (HV)</label>
+                                    <input type="number" id="inp-students" class="w-full px-3 py-2 border border-slate-300 rounded text-right font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none" value="40" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Định mức Lao động (Bơm giá) -->
+                        <div class="space-y-4">
+                            <h3 class="text-sm font-bold text-slate-800 border-l-4 border-blue-500 pl-2">1. Định mức Lao động (Cho phép đẩy cao)</h3>
+                            <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                                        <span>Giảng dạy (10.6h/HV)</span>
+                                        <span>Đơn giá (VNĐ/giờ)</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="inp-ld-gd-gio" class="w-1/3 px-2 py-2 border rounded text-right font-medium text-slate-600" value="10.6" step="0.1" />
+                                        <input type="text" id="inp-ld-gd-gia" class="currency-input w-2/3 px-2 py-2 border border-emerald-300 bg-emerald-50 rounded text-right font-bold text-emerald-700" value="2.000.000" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                                        <span>Ra đề/Coi thi (4.7h)</span>
+                                        <span>Đơn giá (VNĐ/giờ)</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="inp-ld-thi-gio" class="w-1/3 px-2 py-2 border rounded text-right font-medium text-slate-600" value="4.7" step="0.1" />
+                                        <input type="text" id="inp-ld-thi-gia" class="currency-input w-2/3 px-2 py-2 border rounded text-right font-bold text-slate-700" value="1.500.000" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                                        <span>Quản lý lớp (2.3h)</span>
+                                        <span>Đơn giá (VNĐ/giờ)</span>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <input type="number" id="inp-ld-gt-gio" class="w-1/3 px-2 py-2 border rounded text-right font-medium text-slate-600" value="2.3" step="0.1" />
+                                        <input type="text" id="inp-ld-gt-gia" class="currency-input w-2/3 px-2 py-2 border rounded text-right font-bold text-slate-700" value="1.000.000" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vật tư -->
+                        <div class="space-y-4">
+                            <h3 class="text-sm font-bold text-slate-800 border-l-4 border-blue-500 pl-2">2. Định mức Vật tư, Tài liệu</h3>
+                            <div class="flex gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <div class="w-full">
+                                    <label class="block text-xs font-semibold text-slate-500 mb-1">Tài liệu VIP + Quà tặng (VNĐ/HV)</label>
+                                    <input type="text" id="inp-vt-tl" class="currency-input w-full px-3 py-2 border border-emerald-300 bg-emerald-50 rounded text-right font-bold text-emerald-700" value="1.500.000" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CSVC & Thiết bị (Bị Khóa vì HĐ Đèo Cả lo) -->
+                        <div class="space-y-4">
+                            <h3 class="text-sm font-bold text-slate-800 border-l-4 border-red-500 pl-2">3. Cơ sở vật chất & Thiết bị</h3>
+                            <div class="bg-red-50 p-4 rounded-xl border border-red-200 relative overflow-hidden">
+                                <div class="absolute right-0 top-0 opacity-10 mt-1 mr-1">
+                                    <svg class="w-16 h-16 text-red-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                </div>
+                                <p class="text-[11px] font-bold text-red-600 mb-3 uppercase">⚠️ Điều 2.3 & 5.4: Đèo Cả đài thọ 100%</p>
+                                <div class="flex gap-2 mb-2">
+                                    <div class="w-1/2">
+                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Thuê Hội trường</label>
+                                        <input type="text" id="inp-csvc-gia" class="w-full px-2 py-1.5 border border-red-200 bg-white rounded text-right font-bold text-slate-400 cursor-not-allowed" value="0" readonly title="Không được phép thu theo Hợp đồng" />
+                                    </div>
+                                    <div class="w-1/2">
+                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Khấu hao máy chiếu</label>
+                                        <input type="text" id="inp-tb-gia" class="w-full px-2 py-1.5 border border-red-200 bg-white rounded text-right font-bold text-slate-400 cursor-not-allowed" value="0" readonly title="Không được phép thu theo Hợp đồng" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thuế & Quản lý -->
+                        <div class="space-y-4 pb-4">
+                            <h3 class="text-sm font-bold text-slate-800 border-l-4 border-amber-500 pl-2">4. Thuế & Phí điều hành</h3>
+                            <div class="flex gap-3 bg-amber-50 p-4 rounded-xl border border-amber-100">
+                                <div class="w-1/2">
+                                    <label class="block text-xs font-semibold text-amber-800 mb-1">Quản lý NEU (%)</label>
+                                    <input type="number" id="inp-mgmtRate" class="w-full px-3 py-2 border border-amber-200 rounded text-right font-bold text-amber-900" value="7" step="0.5" />
+                                </div>
+                                <div class="w-1/2">
+                                    <label class="block text-xs font-semibold text-amber-800 mb-1">Thuế TNDN (%)</label>
+                                    <input type="number" id="inp-taxRate" class="w-full px-3 py-2 border border-amber-200 rounded text-right font-bold text-amber-900" value="2" step="0.5" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- VÙNG 2: BẢNG TRÌNH KÝ TỰ ĐỘNG -->
+            <div class="xl:col-span-8 space-y-6">
+                
+                <div class="bg-white rounded-2xl shadow-xl border border-slate-200 flex flex-col overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">Bảng Tổng Hợp Trình Kế Toán (Đèo Cả 2026)</h2>
+                            <p class="text-sm text-slate-500 mt-0.5">Khoản tiền dư tự động hấp thụ vào dòng Tích Lũy (Mục 8)</p>
+                        </div>
+                        <button onclick="copyTable()" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition-all shadow-md flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                            Copy Sang Word
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse min-w-[750px]" id="dataTable">
+                            <thead>
+                                <tr class="bg-slate-800 text-slate-100 text-[11px] uppercase tracking-wider">
+                                    <th class="px-4 py-4 font-bold text-center border-r border-slate-700 w-12">TT</th>
+                                    <th class="px-4 py-4 font-bold border-r border-slate-700">Nội dung / Khoản Mục</th>
+                                    <th class="px-4 py-4 font-bold text-center border-r border-slate-700 w-24">Định mức<br/>(1 HV)</th>
+                                    <th class="px-4 py-4 font-bold text-right border-r border-slate-700 w-32">Chi phí VNĐ<br/>(1 HV)</th>
+                                    <th class="px-4 py-4 font-bold text-right w-40">Thành Tiền VNĐ<br/>(Toàn Lớp)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-[13px] divide-y divide-slate-200">
+                                
+                                <!-- 1. Lao động -->
+                                <tr class="bg-slate-100 font-bold text-slate-800">
+                                    <td class="px-4 py-2.5 text-center">1</td>
+                                    <td class="px-4 py-2.5" colspan="2">ĐỊNH MỨC LAO ĐỘNG</td>
+                                    <td class="px-4 py-2.5 text-right" id="out-ld-hv">0</td>
+                                    <td class="px-4 py-2.5 text-right text-base text-blue-700" id="out-ld-tot">0</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-4 py-2"></td>
+                                    <td class="px-4 py-2 pl-8 text-slate-600">- Giảng dạy lý thuyết/thực hành</td>
+                                    <td class="px-4 py-2 text-center text-slate-500" id="out-ld-gd-dm">10.6</td>
+                                    <td class="px-4 py-2 text-right text-slate-700" id="out-ld-gd-hv">0</td>
+                                    <td class="px-4 py-2 text-right font-medium text-slate-700" id="out-ld-gd-tot">0</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-4 py-2"></td>
+                                    <td class="px-4 py-2 pl-8 text-slate-600">- Ra đề, chấm thi, hướng dẫn</td>
+                                    <td class="px-4 py-2 text-center text-slate-500" id="out-ld-thi-dm">4.7</td>
+                                    <td class="px-4 py-2 text-right text-slate-700" id="out-ld-thi-hv">0</td>
+                                    <td class="px-4 py-2 text-right font-medium text-slate-700" id="out-ld-thi-tot">0</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-4 py-2"></td>
+                                    <td class="px-4 py-2 pl-8 text-slate-600">- Quản lý lớp, trực nhật, hậu cần</td>
+                                    <td class="px-4 py-2 text-center text-slate-500" id="out-ld-gt-dm">2.3</td>
+                                    <td class="px-4 py-2 text-right text-slate-700" id="out-ld-gt-hv">0</td>
+                                    <td class="px-4 py-2 text-right font-medium text-slate-700" id="out-ld-gt-tot">0</td>
+                                </tr>
+
+                                <!-- 2. Thiết bị -->
+                                <tr class="bg-slate-50 font-bold text-slate-400">
+                                    <td class="px-4 py-2.5 text-center">2</td>
+                                    <td class="px-4 py-2.5">ĐỊNH MỨC THIẾT BỊ <span class="font-normal text-xs">(Đèo Cả hỗ trợ)</span></td>
+                                    <td class="px-4 py-2.5 text-center font-normal">0.0</td>
+                                    <td class="px-4 py-2.5 text-right">0</td>
+                                    <td class="px-4 py-2.5 text-right">0</td>
+                                </tr>
+
+                                <!-- 3. Vật tư -->
+                                <tr class="bg-slate-100 font-bold text-slate-800">
+                                    <td class="px-4 py-2.5 text-center">3</td>
+                                    <td class="px-4 py-2.5" colspan="2">ĐỊNH MỨC VẬT TƯ</td>
+                                    <td class="px-4 py-2.5 text-right" id="out-vt-hv">0</td>
+                                    <td class="px-4 py-2.5 text-right text-base text-blue-700" id="out-vt-tot">0</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-4 py-2"></td>
+                                    <td class="px-4 py-2 pl-8 text-slate-600">- In ấn tài liệu & Quà tặng HV</td>
+                                    <td class="px-4 py-2 text-center text-slate-500">1 bộ</td>
+                                    <td class="px-4 py-2 text-right text-slate-700" id="out-vt-tl-hv">0</td>
+                                    <td class="px-4 py-2 text-right font-medium text-slate-700" id="out-vt-tl-tot">0</td>
+                                </tr>
+
+                                <!-- 4. CSVC -->
+                                <tr class="bg-slate-50 font-bold text-slate-400">
+                                    <td class="px-4 py-2.5 text-center">4</td>
+                                    <td class="px-4 py-2.5">ĐỊNH MỨC CƠ SỞ VẬT CHẤT <span class="font-normal text-xs">(Đèo Cả lo)</span></td>
+                                    <td class="px-4 py-2.5 text-center font-normal">0.0</td>
+                                    <td class="px-4 py-2.5 text-right">0</td>
+                                    <td class="px-4 py-2.5 text-right">0</td>
+                                </tr>
+
+                                <!-- 5. Quản lý -->
+                                <tr class="bg-amber-50 font-bold text-amber-900 border-y border-amber-200">
+                                    <td class="px-4 py-3 text-center">5</td>
+                                    <td class="px-4 py-3" colspan="2">QUẢN LÝ ĐIỀU HÀNH NEU (<span id="out-mgmt-rate">7</span>%)</td>
+                                    <td class="px-4 py-3 text-right" id="out-mgmt-hv">0</td>
+                                    <td class="px-4 py-3 text-right text-base" id="out-mgmt-tot">0</td>
+                                </tr>
+
+                                <!-- 6. Đối tác ANZIIF -->
+                                <tr class="bg-slate-50/50">
+                                    <td class="px-4 py-2.5 text-slate-300 text-center font-medium">6</td>
+                                    <td class="px-4 py-2.5 font-medium text-slate-400 line-through">TRẢ ĐỐI TÁC ỦY QUYỀN ANZIIF</td>
+                                    <td class="px-4 py-2.5 text-center text-slate-300">-</td>
+                                    <td class="px-4 py-2.5 text-right text-slate-300">0</td>
+                                    <td class="px-4 py-2.5 text-right text-slate-300">0</td>
+                                </tr>
+
+                                <!-- 7. Thuế -->
+                                <tr class="bg-orange-50 font-bold text-orange-900 border-b border-orange-200">
+                                    <td class="px-4 py-3 text-center">7</td>
+                                    <td class="px-4 py-3" colspan="2">THUẾ PHÍ (TNDN <span id="out-tax-rate">2</span>%)</td>
+                                    <td class="px-4 py-3 text-right" id="out-tax-hv">0</td>
+                                    <td class="px-4 py-3 text-right text-base" id="out-tax-tot">0</td>
+                                </tr>
+
+                                <!-- SUBTOTAL -->
+                                <tr class="bg-slate-200 font-black text-slate-900 uppercase text-xs border-b-2 border-slate-400">
+                                    <td class="px-4 py-4 text-center"></td>
+                                    <td class="px-4 py-4" colspan="2">TỔNG CHI PHÍ CỐ ĐỊNH = (1)+(2)+(3)+(4)+(5)+(7)</td>
+                                    <td class="px-4 py-4 text-right" id="out-subtot-hv">0</td>
+                                    <td class="px-4 py-4 text-right text-[15px]" id="out-subtot-tot">0</td>
+                                </tr>
+
+                                <!-- TÍCH LŨY (PLUG) -->
+                                <tr id="row-surplus" class="font-black uppercase text-xs transition-colors duration-300">
+                                    <td class="px-4 py-5 text-center">8</td>
+                                    <td class="px-4 py-5" colspan="2">
+                                        TÍCH LŨY PHÁT TRIỂN CHƯƠNG TRÌNH
+                                        <div id="surplus-percent" class="mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full inline-block">Đang tính...</div>
+                                    </td>
+                                    <td class="px-4 py-5 text-right" id="out-surplus-hv">0</td>
+                                    <td class="px-4 py-5 text-right text-[17px]" id="out-surplus-tot">0</td>
+                                </tr>
+
+                                <!-- FINAL -->
+                                <tr class="bg-slate-900 font-black text-white uppercase text-sm border-t-4 border-slate-700">
+                                    <td class="px-4 py-6 text-center">9</td>
+                                    <td class="px-4 py-6" colspan="2">GIÁ DỊCH VỤ / TỔNG DOANH THU = Cố định + Tích lũy</td>
+                                    <td class="px-4 py-6 text-right text-blue-300" id="out-final-hv">0</td>
+                                    <td class="px-4 py-6 text-right text-[20px] text-emerald-400" id="out-final-tot">0</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formatVND = (amount) => new Intl.NumberFormat('vi-VN').format(Math.round(amount));
+        const parseCurrency = (val) => Number(val.toString().replace(/\D/g, '')) || 0;
+
+        function calculateAndRender() {
+            // Inputs
+            const revenue = parseCurrency(document.getElementById('inp-revenue').value);
+            const students = Number(document.getElementById('inp-students').value) || 1;
+
+            const ld_gd_gio = Number(document.getElementById('inp-ld-gd-gio').value) || 0;
+            const ld_gd_gia = parseCurrency(document.getElementById('inp-ld-gd-gia').value);
+            const ld_thi_gio = Number(document.getElementById('inp-ld-thi-gio').value) || 0;
+            const ld_thi_gia = parseCurrency(document.getElementById('inp-ld-thi-gia').value);
+            const ld_gt_gio = Number(document.getElementById('inp-ld-gt-gio').value) || 0;
+            const ld_gt_gia = parseCurrency(document.getElementById('inp-ld-gt-gia').value);
+
+            const vt_tl_gia = parseCurrency(document.getElementById('inp-vt-tl').value);
+
+            const mgmtRate = Number(document.getElementById('inp-mgmtRate').value) || 0;
+            const taxRate = Number(document.getElementById('inp-taxRate').value) || 0;
+
+            // Calculations per student
+            const cost_ld_gd_hv = ld_gd_gio * ld_gd_gia;
+            const cost_ld_thi_hv = ld_thi_gio * ld_thi_gia;
+            const cost_ld_gt_hv = ld_gt_gio * ld_gt_gia;
+            const cost_ld_hv = cost_ld_gd_hv + cost_ld_thi_hv + cost_ld_gt_hv;
+
+            const cost_vt_hv = vt_tl_gia; // Chỉ có in tài liệu
+
+            // Totals
+            const total_ld = cost_ld_hv * students;
+            const total_vt = cost_vt_hv * students;
+
+            const total_mgmt = revenue * (mgmtRate / 100);
+            const total_tax = revenue * (taxRate / 100);
+
+            // CSVC và Thiết bị bằng 0
+            const total_csvc = 0;
+            const total_tb = 0;
+
+            const sub_total = total_ld + total_tb + total_vt + total_csvc + total_mgmt + total_tax;
+            const surplus = revenue - sub_total;
+            const surplusPercent = revenue > 0 ? (surplus / revenue) * 100 : 0;
+
+            // UI Updates - Lao động
+            document.getElementById('out-ld-gd-hv').innerText = formatVND(cost_ld_gd_hv);
+            document.getElementById('out-ld-gd-tot').innerText = formatVND(cost_ld_gd_hv * students);
+            document.getElementById('out-ld-thi-hv').innerText = formatVND(cost_ld_thi_hv);
+            document.getElementById('out-ld-thi-tot').innerText = formatVND(cost_ld_thi_hv * students);
+            document.getElementById('out-ld-gt-hv').innerText = formatVND(cost_ld_gt_hv);
+            document.getElementById('out-ld-gt-tot').innerText = formatVND(cost_ld_gt_hv * students);
+            document.getElementById('out-ld-hv').innerText = formatVND(cost_ld_hv);
+            document.getElementById('out-ld-tot').innerText = formatVND(total_ld);
+
+            // Vật tư
+            document.getElementById('out-vt-tl-hv').innerText = formatVND(vt_tl_gia);
+            document.getElementById('out-vt-tl-tot').innerText = formatVND(vt_tl_gia * students);
+            document.getElementById('out-vt-hv').innerText = formatVND(cost_vt_hv);
+            document.getElementById('out-vt-tot').innerText = formatVND(total_vt);
+
+            // Quản lý & Thuế
+            document.getElementById('out-mgmt-rate').innerText = mgmtRate;
+            document.getElementById('out-mgmt-hv').innerText = formatVND(total_mgmt / students);
+            document.getElementById('out-mgmt-tot').innerText = formatVND(total_mgmt);
+
+            document.getElementById('out-tax-rate').innerText = taxRate;
+            document.getElementById('out-tax-hv').innerText = formatVND(total_tax / students);
+            document.getElementById('out-tax-tot').innerText = formatVND(total_tax);
+
+            // Subtotal & Surplus
+            document.getElementById('out-subtot-hv').innerText = formatVND(sub_total / students);
+            document.getElementById('out-subtot-tot').innerText = formatVND(sub_total);
+
+            document.getElementById('out-surplus-hv').innerText = formatVND(surplus / students);
+            document.getElementById('out-surplus-tot').innerText = formatVND(surplus);
+
+            // Trạng thái (Status Bar & Row Tích Lũy)
+            const rowSurplus = document.getElementById('row-surplus');
+            const percentBadge = document.getElementById('surplus-percent');
+            const statusBar = document.getElementById('status-bar');
+
+            percentBadge.innerText = `Chiếm ${surplusPercent.toFixed(1)}% tổng giá trị`;
+
+            if(surplus < 0) {
+                // Âm tiền
+                rowSurplus.className = "bg-red-200 text-red-900 border-y-2 border-red-400 font-black uppercase text-xs transition-colors duration-300";
+                percentBadge.className = "mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full inline-block bg-red-600 text-white";
+                statusBar.className = "mt-4 md:mt-0 px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors duration-300 bg-red-600 text-white";
+                statusBar.innerHTML = "❌ CẢNH BÁO LỖ: Cần giảm đơn giá bên trái xuống!";
+            } else if (surplusPercent > 25) {
+                // Tích lũy quá cao (>25%)
+                rowSurplus.className = "bg-orange-100 text-orange-900 border-y-2 border-orange-400 font-black uppercase text-xs transition-colors duration-300";
+                percentBadge.className = "mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full inline-block bg-orange-600 text-white";
+                statusBar.className = "mt-4 md:mt-0 px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors duration-300 bg-orange-500 text-white";
+                statusBar.innerHTML = "⚠️ RỦI RO BỊ TRẢ HỒ SƠ: Lãi quá nhiều (>25%). Hãy bơm thêm đơn giá!";
+            } else {
+                // Tích lũy an toàn (0 - 25%)
+                rowSurplus.className = "bg-emerald-100 text-emerald-900 border-y-2 border-emerald-400 font-black uppercase text-xs transition-colors duration-300";
+                percentBadge.className = "mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full inline-block bg-emerald-600 text-white";
+                statusBar.className = "mt-4 md:mt-0 px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-colors duration-300 bg-emerald-500 text-white flex items-center";
+                statusBar.innerHTML = "<svg class='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'></path></svg> HỢP LỆ: Tỷ lệ tích lũy quá đẹp để trình ký!";
+            }
+
+            document.getElementById('out-final-hv').innerText = formatVND(revenue / students);
+            document.getElementById('out-final-tot').innerText = formatVND(revenue);
+        }
+
+        // Auto formatting inputs
+        document.querySelectorAll('.currency-input').forEach(input => {
+            input.addEventListener('input', function() {
+                let cursorPosition = this.selectionStart;
+                let oldLength = this.value.length;
+                let val = this.value.replace(/\D/g, '');
+                if (val !== '') {
+                    this.value = new Intl.NumberFormat('vi-VN').format(parseInt(val));
+                } else {
+                    this.value = '';
+                }
+                let newLength = this.value.length;
+                cursorPosition = cursorPosition + (newLength - oldLength);
+                this.setSelectionRange(cursorPosition, cursorPosition);
+                calculateAndRender();
+            });
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+            if(!input.classList.contains('currency-input')) {
+                input.addEventListener('input', calculateAndRender);
+            }
+        });
+
+        function copyTable() {
+            const elTable = document.getElementById('dataTable');
+            let range = document.createRange();
+            let sel = window.getSelection();
+            sel.removeAllRanges();
+            range.selectNodeContents(elTable);
+            sel.addRange(range);
+            document.execCommand('copy');
+            sel.removeAllRanges();
+            
+            const btn = event.currentTarget;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Đã Copy thành công!`;
+            btn.classList.replace('bg-blue-600', 'bg-emerald-600');
+            btn.classList.replace('hover:bg-blue-700', 'hover:bg-emerald-700');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.replace('bg-emerald-600', 'bg-blue-600');
+                btn.classList.replace('hover:bg-emerald-700', 'hover:bg-blue-700');
+            }, 2500);
+        }
+
+        window.onload = calculateAndRender;
+    </script>
+</body>
+</html>
+

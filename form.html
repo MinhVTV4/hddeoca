@@ -1,0 +1,634 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Định Mức Kinh Tế Kỹ Thuật</title>
+    <!-- Thư viện CSS Tailwind để làm đẹp giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Thư viện Icon -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* CSS tuỳ chỉnh cho văn bản và in ấn */
+        body {
+            font-family: 'Times New Roman', Times, serif; /* Font chuẩn văn bản nhà nước */
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .inline-input {
+            background-color: rgba(254, 240, 138, 0.8); /* Vàng nhạt */
+            border: none;
+            border-bottom: 1px dashed #9ca3af;
+            color: #1e3a8a;
+            font-weight: bold;
+            outline: none;
+            transition: background-color 0.2s;
+            padding: 0 4px;
+        }
+
+        .inline-input:focus {
+            background-color: rgba(253, 224, 71, 1);
+            border-bottom: 1px solid #2563eb;
+        }
+
+        .text-input {
+            background-color: rgba(254, 240, 138, 0.8);
+            border: none;
+            border-bottom: 1px dashed #9ca3af;
+            color: #000;
+            outline: none;
+            width: 100%;
+        }
+
+        /* Ẩn các nút điều khiển và xóa màu vàng khi in (Ctrl + P) */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+                margin: 0;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-document {
+                box-shadow: none !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+            .inline-input, .text-input, .target-input {
+                background-color: transparent !important;
+                border: none !important;
+                color: black !important;
+                padding: 0 !important;
+                -webkit-appearance: none;
+            }
+        }
+    </style>
+</head>
+<body class="py-8 px-2 md:px-8">
+
+    <!-- Thanh Điều Khiển (Không hiển thị khi in) -->
+    <div class="max-w-5xl mx-auto mb-6 bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 no-print border-l-4 border-blue-500 font-sans">
+        <div class="flex items-center gap-3">
+            <i data-lucide="calculator" class="text-blue-500 w-8 h-8"></i>
+            <div>
+                <h2 class="font-bold text-lg text-slate-800">Mô phỏng Văn bản Tương tác (HTML/JS)</h2>
+                <p class="text-sm text-gray-500">Thay đổi các ô màu <span class="bg-yellow-200 px-1 rounded text-black">vàng</span>, các bảng tính sẽ tự động cập nhật số liệu lập tức.</p>
+            </div>
+        </div>
+        <button onclick="window.print()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg shadow transition font-medium">
+            <i data-lucide="printer" class="w-5 h-5"></i> In / Xuất PDF
+        </button>
+    </div>
+
+    <!-- Khung Văn Bản Chính -->
+    <div class="max-w-5xl mx-auto bg-white p-10 md:p-16 shadow-xl print-document text-[15px] leading-relaxed">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-start text-center font-bold mb-10">
+            <div>
+                <p>ĐẠI HỌC KINH TẾ QUỐC DÂN</p>
+                <p class="border-b-2 border-black inline-block pb-0.5">ĐƠN VỊ: KHOA BẢO HIỂM</p>
+            </div>
+            <div>
+                <p>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
+                <p class="border-b-2 border-black inline-block pb-0.5">Độc lập – Tự do – Hạnh phúc</p>
+                <p class="mt-2 text-right font-normal italic">Hà Nội, ngày 18 tháng 3 năm 2026</p>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-xl font-bold">ĐỊNH MỨC KINH TẾ - KỸ THUẬT (MẪU)</h1>
+            <p class="italic">(Áp dụng cho các chương trình đào tạo, bồi dưỡng ngắn hạn)</p>
+        </div>
+
+        <!-- I. THÔNG TIN CHUNG -->
+        <h2 class="font-bold uppercase mb-2">I. THÔNG TIN CHUNG</h2>
+        <table class="w-full mb-6 border-none">
+            <tbody>
+                <tr><td class="w-52 font-semibold align-top py-1">Tên chương trình:</td><td><input type="text" id="inp_tenChuongTrinh" class="text-input" value="Chương trình đào tạo ủy quyền của ANZIIF về Bảo hiểm nhân thọ."></td></tr>
+                <tr><td class="font-semibold align-top py-1">Tổng Thời lượng:</td><td><input type="text" id="inp_thoiLuong" class="text-input" value="01 Môn học thời lượng 75 tiết/1 môn"></td></tr>
+                <tr><td class="font-semibold align-top py-1">Đối tượng:</td><td><input type="text" id="inp_doiTuong" class="text-input" value="Học viên có nhu cầu"></td></tr>
+                <tr><td class="font-semibold align-top py-1">Quy mô lớp tiêu chuẩn:</td><td><input type="number" id="inp_quyMoTieuChuan" class="inline-input text-center w-16" value="8"> học viên/lớp</td></tr>
+                <tr><td class="font-semibold align-top py-1">Quy mô lớp tối thiểu:</td><td><input type="number" id="inp_quyMoToiThieu" class="inline-input text-center w-16" value="6"> học viên/lớp</td></tr>
+                <tr><td class="font-semibold align-top py-1">Hình thức:</td><td><input type="text" id="inp_hinhThuc" class="text-input" value="Trực tiếp / Trực tuyến / Kết hợp"></td></tr>
+                <tr><td class="font-semibold align-top py-1">Địa điểm đào tạo:</td><td><input type="text" id="inp_diaDiem" class="text-input" value="Đại học Kinh tế Quốc dân"></td></tr>
+                <tr><td class="font-semibold align-top py-1">Chuẩn đầu ra:</td><td><input type="text" id="inp_chuanDauRa" class="text-input" value="Cấp Chứng chỉ của ANZIIF"></td></tr>
+            </tbody>
+        </table>
+
+        <!-- II. CĂN CỨ XÂY DỰNG -->
+        <h2 class="font-bold uppercase mb-2">II. CĂN CỨ XÂY DỰNG ĐỊNH MỨC:</h2>
+        <p class="mb-6 text-justify">Thông tư số 14/2024/TT-BGDĐT ngày 31/10/2024 của Bộ Giáo dục và Đào tạo về việc hướng dẫn quy trình xây dựng, thẩm định, ban hành định mức kinh tế - kỹ thuật và phương pháp định giá dịch vụ giáo dục, đào tạo.</p>
+
+        <!-- III. NGUYÊN TẮC -->
+        <h2 class="font-bold uppercase mb-2">III. NGUYÊN TẮC XÂY DỰNG ĐỊNH MỨC:</h2>
+        <ul class="list-disc pl-6 mb-6 space-y-1">
+            <li>Định mức được xác định cho 01 học viên/ 0 môn học;</li>
+            <li>Định mức lao động = Tổng hao phí sức lao động của lớp / Quy mô lớp</li>
+            <li>Định mức thiết bị = Tổng thời gian sử dụng thiết bị / Quy mô lớp</li>
+            <li>Định mức vật tư = Tổng vật tư lớp / Quy mô lớp</li>
+            <li>Định mức cơ sở vật chất = Diện tích × Thời gian</li>
+            <li>Chi phí = Định mức × Đơn giá tương ứng</li>
+            <li>Giá = Tổng chi phí + tích lũy</li>
+            <li>1 tiết học = 45-60 phút. Sau đây gọi chung là “giờ”</li>
+        </ul>
+
+        <!-- KHỐI LƯỢNG -->
+        <h2 class="font-bold uppercase mb-2">IV. CẤU TRÚC KHỐI LƯỢNG (kèm ví dụ)</h2>
+        <table class="w-full mb-6 border-collapse border border-black text-sm">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border border-black p-2 w-12 text-center">STT</th>
+                    <th class="border border-black p-2 text-center">Nội dung</th>
+                    <th class="border border-black p-2 w-32 text-center">Số giờ (giờ/tiết)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="border border-black p-2 text-center">1</td><td class="border border-black p-2">Xây dựng CTĐT/học liệu</td><td class="border border-black p-2 text-center"><input type="number" id="inp_gioXayDung" class="inline-input text-center w-20" value="10"></td></tr>
+                <tr><td class="border border-black p-2 text-center">2</td><td class="border border-black p-2">Giảng dạy lý thuyết/thực hành</td><td class="border border-black p-2 text-center"><input type="number" id="inp_gioGiangDay" class="inline-input text-center w-20" value="75"></td></tr>
+                <tr><td class="border border-black p-2 text-center">3</td><td class="border border-black p-2">Ra đề thi</td><td class="border border-black p-2 text-center"><input type="number" id="inp_gioRaDe" class="inline-input text-center w-20" value="30"></td></tr>
+                <tr><td class="border border-black p-2 text-center">4</td><td class="border border-black p-2">Đánh giá kết quả học tập</td><td class="border border-black p-2 text-center"><input type="number" id="inp_gioCoiThi" class="inline-input text-center w-20" value="7.5" step="0.1"></td></tr>
+                <tr class="font-bold"><td class="border border-black p-2 text-center" colspan="2">Tổng số giờ:</td><td class="border border-black p-2 text-center"><span data-bind="tongGioTrucTiep" data-format="num"></span></td></tr>
+            </tbody>
+        </table>
+
+        <!-- ĐỊNH MỨC KTKT -->
+        <h2 class="font-bold uppercase mb-2">IV. ĐỊNH MỨC KINH TẾ - KỸ THUẬT</h2>
+        
+        <!-- 1. LĐ -->
+        <h3 class="font-bold mb-2">1. ĐỊNH MỨC LAO ĐỘNG</h3>
+        <p class="font-bold italic mb-1">1.1. Lao động trực tiếp</p>
+        <p class="mb-2 italic">Định mức lao động trực tiếp (giờ/HV) = Tổng giờ hao phí / Quy mô lớp</p>
+        
+        <table class="w-full mb-6 border-collapse border border-black text-sm text-center">
+            <thead class="bg-gray-100 font-bold">
+                <tr>
+                    <th class="border border-black p-2">Nội dung</th>
+                    <th class="border border-black p-2 w-20">Tổng giờ (giờ)<br>(1)</th>
+                    <th class="border border-black p-2 w-20">Quy mô (HV)<br>(2)</th>
+                    <th class="border border-black p-2 w-24">Định mức (giờ/HV)<br>(1)/(2)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="border border-black p-2 text-left">1. Xây dựng CTĐT/học liệu</td><td class="border border-black p-2"><span data-bind="gioXayDung" data-format="num"></span></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmXayDung" data-format="num"></span></td></tr>
+                <tr><td class="border border-black p-2 text-left">2. Giảng dạy lý thuyết/thực hành</td><td class="border border-black p-2"><span data-bind="gioGiangDay" data-format="num"></span></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmGiangDay" data-format="num"></span></td></tr>
+                <tr><td class="border border-black p-2 text-left">3. Ra đề thi</td><td class="border border-black p-2"><span data-bind="gioRaDe" data-format="num"></span></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmRaDe" data-format="num"></span></td></tr>
+                <tr><td class="border border-black p-2 text-left">4. Đánh giá kết quả học tập</td><td class="border border-black p-2"><span data-bind="gioCoiThi" data-format="num"></span></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmCoiThi" data-format="num"></span></td></tr>
+                <tr class="font-bold"><td class="border border-black p-2 text-left">Tổng số giờ</td><td class="border border-black p-2"><span data-bind="tongGioTrucTiep" data-format="num"></span></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmTrucTiep" data-format="num"></span></td></tr>
+            </tbody>
+        </table>
+
+        <p class="font-bold italic mb-1">1.2. Lao động gián tiếp</p>
+        <p class="mb-2 text-justify">Định mức lao động gián tiếp (giờ) = Định mức lao động trực tiếp × Tỷ lệ (%). Lao động gián tiếp được tính bằng <input type="number" id="inp_tyLeGianTiep" class="inline-input text-center w-12" value="15">% trên tổng số giờ lao động trực tiếp.</p>
+        
+        <table class="w-full mb-6 border-collapse border border-black text-sm text-center">
+            <thead class="bg-gray-100 font-bold">
+                <tr>
+                    <th class="border border-black p-2">Nội dung</th>
+                    <th class="border border-black p-2 w-20">LĐTT<br>(1)</th>
+                    <th class="border border-black p-2 w-16">Tỷ lệ<br>(2)</th>
+                    <th class="border border-black p-2 w-20">Tổng LĐGT<br>(3)=(1)x(2)</th>
+                    <th class="border border-black p-2 w-16">HV<br>(4)</th>
+                    <th class="border border-black p-2 w-20">Định mức<br>(3)/(4)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border border-black p-2 text-left">Quản lý, hỗ trợ, thủ tục hành chính, hậu cần...</td>
+                    <td class="border border-black p-2"><span data-bind="tongGioTrucTiep" data-format="num"></span></td>
+                    <td class="border border-black p-2"><span data-bind="tyLeGianTiep"></span>%</td>
+                    <td class="border border-black p-2"><span data-bind="tongGioGianTiep" data-format="num"></span></td>
+                    <td class="border border-black p-2"><span data-bind="HV"></span></td>
+                    <td class="border border-black p-2"><span data-bind="dmGianTiep" data-format="num"></span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="font-bold italic mb-2">1.3. Tổng định mức lao động = Định mức LĐ trực tiếp + Định mức LĐ gián tiếp</p>
+        <table class="w-2/3 mb-8 border-collapse border border-black text-sm">
+            <tbody>
+                <tr><td class="border border-black p-2">1.1. Lao động trực tiếp</td><td class="border border-black p-2 text-center w-32"><span data-bind="dmTrucTiep" data-format="num"></span></td></tr>
+                <tr><td class="border border-black p-2">1.2. Lao động gián tiếp</td><td class="border border-black p-2 text-center"><span data-bind="dmGianTiep" data-format="num"></span></td></tr>
+                <tr class="font-bold"><td class="border border-black p-2">Tổng cộng:</td><td class="border border-black p-2 text-center"><span data-bind="dmTongLaoDong" data-format="num"></span></td></tr>
+            </tbody>
+        </table>
+
+        <!-- 2. Thiết bị -->
+        <h3 class="font-bold mb-2">2. ĐỊNH MỨC THIẾT BỊ</h3>
+        <p class="mb-2 italic">Định mức thiết bị (giờ/HV) = Tổng thời gian sử dụng thiết bị / Quy mô lớp</p>
+        <table class="w-full mb-8 border-collapse border border-black text-sm text-center">
+            <thead class="bg-gray-100 font-bold">
+                <tr>
+                    <th class="border border-black p-2 text-left">Thiết bị</th>
+                    <th class="border border-black p-2 w-24">Số lượng<br>(1)</th>
+                    <th class="border border-black p-2 w-24">Thời gian (h)<br>(2)</th>
+                    <th class="border border-black p-2 w-24">Quy mô<br>(3)</th>
+                    <th class="border border-black p-2 w-24">Định mức<br>(1)x(2)/(3)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="border border-black p-2 text-left">Phân bổ khấu hao máy chiếu</td><td class="border border-black p-2">1</td><td class="border border-black p-2"><input type="number" id="inp_gioDungMayChieu" class="inline-input text-center w-16" value="75"></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmMayChieu" data-format="num"></span></td></tr>
+                <tr><td class="border border-black p-2 text-left">Phân bổ khấu hao máy tính/LMS</td><td class="border border-black p-2">1</td><td class="border border-black p-2"><input type="number" id="inp_gioDungMayTinh" class="inline-input text-center w-16" value="75"></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmMayTinh" data-format="num"></span></td></tr>
+                <tr><td class="border border-black p-2 text-left">Phân bổ thiết bị hỗ trợ (loa, mic...)</td><td class="border border-black p-2">1</td><td class="border border-black p-2"><input type="number" id="inp_gioDungThietBiHoTro" class="inline-input text-center w-16" value="75"></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmTbHoTro" data-format="num"></span></td></tr>
+                <tr class="font-bold"><td class="border border-black p-2 text-left">Tổng</td><td class="border border-black p-2"></td><td class="border border-black p-2"><span data-bind="tongGioThietBi" data-format="num"></span></td><td class="border border-black p-2"><span data-bind="HV"></span></td><td class="border border-black p-2"><span data-bind="dmTongThietBi" data-format="num"></span></td></tr>
+            </tbody>
+        </table>
+
+        <!-- 3. Vật tư -->
+        <h3 class="font-bold mb-2">3. ĐỊNH MỨC VẬT TƯ</h3>
+        <table class="w-full mb-8 border-collapse border border-black text-sm text-center">
+            <thead class="bg-gray-100 font-bold">
+                <tr>
+                    <th class="border border-black p-2 text-left">Nội dung</th>
+                    <th class="border border-black p-2 w-32">Đơn vị</th>
+                    <th class="border border-black p-2 w-24">Số lượng</th>
+                    <th class="border border-black p-2 w-32">Định mức</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="border border-black p-2 text-left">Tài liệu/văn phòng phẩm</td><td class="border border-black p-2">bộ/HV</td><td class="border border-black p-2">1</td><td class="border border-black p-2">1 bộ/HV</td></tr>
+                <tr><td class="border border-black p-2 text-left">Điện, nước...</td><td class="border border-black p-2">suất/HV</td><td class="border border-black p-2">1</td><td class="border border-black p-2">1 suất/HV</td></tr>
+            </tbody>
+        </table>
+
+        <!-- 4. CSVC -->
+        <h3 class="font-bold mb-2">4. ĐỊNH MỨC CƠ SỞ VẬT CHẤT</h3>
+        <table class="w-full mb-2 border-collapse border border-black text-sm text-center">
+            <thead class="bg-gray-100 font-bold">
+                <tr>
+                    <th class="border border-black p-2 text-left">Chỉ tiêu</th>
+                    <th class="border border-black p-2 w-16">Số giờ<br>(1)</th>
+                    <th class="border border-black p-2 w-20">ĐM/HV (m2)<br>(2)</th>
+                    <th class="border border-black p-2 w-24">Tổng ĐM<br>(3)=(1)x(2)</th>
+                    <th class="border border-black p-2 w-16">HV<br>(4)</th>
+                    <th class="border border-black p-2 w-24">Tổng ĐM/HV<br>(5)=(3)/(4)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border border-black p-2 text-left">1. Diện tích quản lý, học nhóm</td>
+                    <td class="border border-black p-2"><input type="number" id="inp_gioDienTichQuanLy" class="inline-input text-center w-12" value="40"></td>
+                    <td class="border border-black p-2"><input type="number" id="inp_dmDienTichQuanLy" class="inline-input text-center w-12" value="4" step="0.1"></td>
+                    <td class="border border-black p-2"><span data-bind="csvcQuanLy" data-format="num"></span></td>
+                    <td class="border border-black p-2"><span data-bind="HV"></span></td>
+                    <td class="border border-black p-2"><span data-bind="dmCsvcQuanLy" data-format="num"></span></td>
+                </tr>
+                <tr>
+                    <td class="border border-black p-2 text-left">2. Diện tích phòng học lý thuyết</td>
+                    <td class="border border-black p-2"><input type="number" id="inp_gioDienTichLyThuyet" class="inline-input text-center w-12" value="75"></td>
+                    <td class="border border-black p-2"><input type="number" id="inp_dmDienTichLyThuyet" class="inline-input text-center w-16" value="6.2533" step="0.0001"></td>
+                    <td class="border border-black p-2"><span data-bind="csvcLyThuyet" data-format="num"></span></td>
+                    <td class="border border-black p-2"><span data-bind="HV"></span></td>
+                    <td class="border border-black p-2"><span data-bind="dmCsvcLyThuyet" data-format="num"></span></td>
+                </tr>
+                <tr>
+                    <td class="border border-black p-2 text-left">3. Diện tích cho thi, kiểm tra</td>
+                    <td class="border border-black p-2"><input type="number" id="inp_gioDienTichThi" class="inline-input text-center w-12" value="7.5" step="0.1"></td>
+                    <td class="border border-black p-2"><input type="number" id="inp_dmDienTichThi" class="inline-input text-center w-12" value="4" step="0.1"></td>
+                    <td class="border border-black p-2"><span data-bind="csvcThi" data-format="num"></span></td>
+                    <td class="border border-black p-2"><span data-bind="HV"></span></td>
+                    <td class="border border-black p-2"><span data-bind="dmCsvcThi" data-format="num"></span></td>
+                </tr>
+                <tr>
+                    <td class="border border-black p-2 text-left">4. Hạ tầng chung <input type="number" id="inp_tyLeCSVCChung" class="inline-input text-center w-10" value="5">% x (1+2+3)</td>
+                    <td class="border border-black p-2"></td><td class="border border-black p-2"></td>
+                    <td class="border border-black p-2"><span data-bind="csvcChung" data-format="num"></span></td>
+                    <td class="border border-black p-2"><span data-bind="HV"></span></td>
+                    <td class="border border-black p-2"><span data-bind="dmCsvcChung" data-format="num"></span></td>
+                </tr>
+                <tr class="font-bold">
+                    <td class="border border-black p-2 text-left">Tổng cộng</td>
+                    <td class="border border-black p-2"></td><td class="border border-black p-2"></td>
+                    <td class="border border-black p-2"><span data-bind="tongCSVC" data-format="num"></span></td>
+                    <td class="border border-black p-2"><span data-bind="HV"></span></td>
+                    <td class="border border-black p-2"><span data-bind="dmTongCSVC" data-format="num"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="italic text-sm mb-8">(Định mức sử dụng hạ tầng CSVC chung do đơn vị tự xác định theo tỷ lệ <span data-bind="tyLeCSVCChung"></span> %)</p>
+
+        <!-- TỔNG HỢP ĐỊNH MỨC -->
+        <h2 class="font-bold uppercase mb-2">IV. TỔNG HỢP ĐỊNH MỨC (01 HỌC VIÊN)</h2>
+        <table class="w-2/3 mb-10 border-collapse border border-black text-sm text-center mx-auto">
+            <thead class="bg-gray-100 font-bold">
+                <tr>
+                    <th class="border border-black p-2">Stt</th>
+                    <th class="border border-black p-2">Yếu tố</th>
+                    <th class="border border-black p-2">Đơn vị</th>
+                    <th class="border border-black p-2">Định mức/HV</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="border border-black p-2">1</td><td class="border border-black p-2 text-left">Định mức lao động</td><td class="border border-black p-2">giờ/HV</td><td class="border border-black p-2 font-bold"><span data-bind="dmTongLaoDong" data-format="num"></span></td></tr>
+                <tr><td class="border border-black p-2">2</td><td class="border border-black p-2 text-left">Định mức thiết bị</td><td class="border border-black p-2">giờ/HV</td><td class="border border-black p-2 font-bold"><span data-bind="dmTongThietBi" data-format="num"></span></td></tr>
+                <tr><td class="border border-black p-2">3</td><td class="border border-black p-2 text-left">Định mức vật tư</td><td class="border border-black p-2">bộ/suất</td><td class="border border-black p-2 font-bold">1/1</td></tr>
+                <tr><td class="border border-black p-2">4</td><td class="border border-black p-2 text-left">Định mức cơ sở vật chất</td><td class="border border-black p-2">m²·giờ/HV</td><td class="border border-black p-2 font-bold"><span data-bind="dmTongCSVC" data-format="num"></span></td></tr>
+            </tbody>
+        </table>
+
+        <!-- XÁC ĐỊNH GIÁ -->
+        <h2 class="font-bold uppercase mb-2">V. XÁC ĐỊNH GIÁ DỊCH VỤ</h2>
+        <p class="mb-4 text-justify">Thiết lập đơn giá nội bộ hợp lý để đạt mức giá này. Định mức tổng hợp = Tổng các định mức thành phần. Giá dịch vụ tính trên một học viên.</p>
+
+        <!-- 1. Lương -->
+        <h3 class="font-bold mb-2">1. Chi phí tiền lương, tiền công cho lao động</h3>
+        <table class="w-full mb-6 border-collapse border border-black text-sm">
+            <thead class="bg-gray-100 font-bold text-center">
+                <tr>
+                    <th class="border border-black p-2">Nội dung</th>
+                    <th class="border border-black p-2 w-24">Định mức</th>
+                    <th class="border border-black p-2 w-32">Đơn giá/ giờ</th>
+                    <th class="border border-black p-2 w-32">Thành tiền (vnđ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="border border-black p-2 font-bold">1. Lao động trực tiếp</td><td class="border border-black p-2 text-center"></td><td class="border border-black p-2"></td><td class="border border-black p-2 text-right font-bold"><span data-bind="tienTrucTiep" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 pl-6">- Xây dựng CTĐT, giảng dạy</td><td class="border border-black p-2 text-center"><span data-bind="dmTrucTiepP1" data-format="num"></span></td><td class="border border-black p-2 text-center"><input type="number" id="inp_giaGiangDay" class="inline-input text-center w-24" value="120000"></td><td class="border border-black p-2 text-right"><span data-bind="tienXayDungGiangDay" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 pl-6">- Ra đề, coi thi</td><td class="border border-black p-2 text-center"><span data-bind="dmTrucTiepP2" data-format="num"></span></td><td class="border border-black p-2 text-center"><input type="number" id="inp_giaKhaoThi" class="inline-input text-center w-24" value="200000"></td><td class="border border-black p-2 text-right"><span data-bind="tienRaDeCoiThi" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 font-bold">2. Lao động gián tiếp</td><td class="border border-black p-2 text-center"><span data-bind="dmGianTiep" data-format="num"></span></td><td class="border border-black p-2 text-center"><input type="number" id="inp_giaGianTiep" class="inline-input text-center w-24" value="100000"></td><td class="border border-black p-2 text-right font-bold"><span data-bind="tienGianTiep" data-format="vnd"></span></td></tr>
+                <tr class="font-bold bg-gray-50"><td class="border border-black p-2 text-center" colspan="3">Tổng</td><td class="border border-black p-2 text-right text-blue-700"><span data-bind="tongTienLaoDong" data-format="vnd"></span></td></tr>
+            </tbody>
+        </table>
+
+        <!-- 2 & 3. TB, VT -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div>
+                <h3 class="font-bold mb-2">2. Chi phí sử dụng thiết bị</h3>
+                <table class="w-full border-collapse border border-black text-sm">
+                    <tbody>
+                        <tr><td class="border border-black p-2">Định mức</td><td class="border border-black p-2 text-center w-16"><span data-bind="dmTongThietBi" data-format="num"></span></td></tr>
+                        <tr><td class="border border-black p-2">Đơn giá</td><td class="border border-black p-2 text-center"><input type="number" id="inp_giaThietBi" class="inline-input text-center w-20" value="4000"></td></tr>
+                        <tr class="font-bold bg-gray-50"><td class="border border-black p-2">Tổng</td><td class="border border-black p-2 text-right text-blue-700"><span data-bind="tienThietBi" data-format="vnd"></span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <h3 class="font-bold mb-2">3. Chi phí vật tư</h3>
+                <table class="w-full border-collapse border border-black text-sm">
+                    <tbody>
+                        <tr><td class="border border-black p-2">Tài liệu</td><td class="border border-black p-2 text-center"><input type="number" id="inp_giaTaiLieu" class="inline-input text-center w-24" value="120000"></td></tr>
+                        <tr><td class="border border-black p-2">Điện nước</td><td class="border border-black p-2 text-center"><input type="number" id="inp_giaDienNuoc" class="inline-input text-center w-24" value="120000"></td></tr>
+                        <tr class="font-bold bg-gray-50"><td class="border border-black p-2">Tổng</td><td class="border border-black p-2 text-right text-blue-700"><span data-bind="tongVatTu" data-format="vnd"></span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h3 class="font-bold mb-2">4. Chi phí cho sử dụng cơ sở vật chất</h3>
+        <table class="w-full mb-6 border-collapse border border-black text-sm">
+            <tbody>
+                <tr>
+                    <td class="border border-black p-2 w-48">Định mức CSVC</td>
+                    <td class="border border-black p-2 text-center w-24"><span data-bind="dmTongCSVC" data-format="num"></span></td>
+                    <td class="border border-black p-2 w-48 text-center">Đơn giá: <input type="number" id="inp_giaCSVC" class="inline-input text-center w-20" value="2650"></td>
+                    <td class="border border-black p-2 text-right font-bold text-blue-700"><span data-bind="tienCSVC" data-format="vnd"></span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 5, 6, 7. Vĩ mô -->
+        <h3 class="font-bold mb-1">5. Chi trả đối tác ủy quyền ANZIIF</h3>
+        <p class="mb-4 text-justify">Chi phí = <input type="number" id="inp_chiPhiDoiTac" class="inline-input text-left w-24" value="4410000"> vnđ/học viên (chi phí này được xác định theo thỏa thuận... tương đương với <input type="number" id="inp_tyLeDoiTac" class="inline-input text-center w-10" value="49">% mức thu giá dịch vụ)</p>
+
+        <h3 class="font-bold mb-1">6. Chi phí quản lý điều hành trả về đại học (<span data-bind="tyLeQuanLyNEU"></span>%)</h3>
+        <p class="mb-2 text-justify">Tổng chi phí đào tạo sau khi trừ đi chi phí trả đối tác. Công thức: (Chi phí đối tác x <span data-bind="tyLeNEU"></span>%) / <span data-bind="tyLeDoiTac"></span>% x <input type="number" id="inp_tyLeQuanLyNEU" class="inline-input text-center w-10" value="7">%</p>
+        <table class="w-full mb-6 border-collapse border border-black text-sm">
+            <tbody>
+                <tr><td class="border border-black p-2">Chi phí quản lý điều hành của NEU</td><td class="border border-black p-2 text-right font-bold text-blue-700 w-40"><span data-bind="tienQuanLyNEU" data-format="vnd"></span></td></tr>
+            </tbody>
+        </table>
+
+        <h3 class="font-bold mb-2">7. Thuế phí</h3>
+        <ul class="list-disc pl-6 mb-6 space-y-2">
+            <li>Thuế thu nhập doanh nghiệp <input type="number" id="inp_tyLeThueTNDN" class="inline-input text-center w-10" value="2">% được tính trên tổng giá dịch vụ đào tạo (Giá mục tiêu) = <span data-bind="giaDichVuMucTieu" data-format="vnd"></span> x <span data-bind="tyLeThueTNDN"></span>% = <b><span data-bind="thueTNDN" data-format="vnd"></span> đồng</b></li>
+            <li>Thuế nhà thầu <input type="number" id="inp_tyLeThueNhaThau" class="inline-input text-center w-10" value="5">% được tính trên phần kinh phí trả đối tác = <span data-bind="chiPhiDoiTac" data-format="vnd"></span> x <span data-bind="tyLeThueNhaThau"></span>% = <b><span data-bind="thueNhaThau" data-format="vnd"></span> đồng</b></li>
+        </ul>
+
+        <!-- 8. TỔNG HỢP GIÁ -->
+        <h2 class="font-bold text-lg uppercase mb-4 text-center mt-10">6. TỔNG HỢP GIÁ</h2>
+        
+        <div class="bg-yellow-50 border border-yellow-300 p-3 mb-4 rounded flex items-center gap-3 no-print">
+            <i data-lucide="info" class="text-yellow-600 w-5 h-5 flex-shrink-0"></i>
+            <p class="text-sm text-yellow-800">
+                <strong>Mẹo:</strong> Nhập <b>Giá Dịch Vụ Mục Tiêu</b> mà bạn muốn thu tại ô nền xanh dòng số 10. Hệ thống tự động tính ra <b>Tích lũy</b> (dòng 9) cho bạn.
+            </p>
+        </div>
+
+        <table class="w-full mb-8 border-collapse border-2 border-black text-base">
+            <thead class="bg-gray-200 font-bold text-center">
+                <tr>
+                    <th class="border border-black p-3 w-12">TT</th>
+                    <th class="border border-black p-3">Khoản mục</th>
+                    <th class="border border-black p-3 w-48">Chi phí (đồng) / HV</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="border border-black p-2 text-center">1</td><td class="border border-black p-2 font-semibold">Lao động</td><td class="border border-black p-2 text-right"><span data-bind="tongTienLaoDong" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 text-center">2</td><td class="border border-black p-2 font-semibold">Thiết bị</td><td class="border border-black p-2 text-right"><span data-bind="tienThietBi" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 text-center">3</td><td class="border border-black p-2 font-semibold">Vật tư</td><td class="border border-black p-2 text-right"><span data-bind="tongVatTu" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 text-center">4</td><td class="border border-black p-2 font-semibold">CSVC</td><td class="border border-black p-2 text-right"><span data-bind="tienCSVC" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 text-center">5</td><td class="border border-black p-2 font-semibold">Quản lý điều hành NEU <span data-bind="tyLeQuanLyNEU"></span>%</td><td class="border border-black p-2 text-right"><span data-bind="tienQuanLyNEU" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 text-center">6</td><td class="border border-black p-2 font-semibold">Chuyển trả đối tác</td><td class="border border-black p-2 text-right"><span data-bind="chiPhiDoiTac" data-format="vnd"></span></td></tr>
+                <tr class="bg-gray-50"><td class="border border-black p-2 text-center font-bold">7</td><td class="border border-black p-2 font-bold">Thuế phí</td><td class="border border-black p-2 text-right font-bold"><span data-bind="tongThuePhi" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 text-center"></td><td class="border border-black p-2 italic pl-6">- Thuế TNDN <span data-bind="tyLeThueTNDN"></span>%</td><td class="border border-black p-2 text-right italic"><span data-bind="thueTNDN" data-format="vnd"></span></td></tr>
+                <tr><td class="border border-black p-2 text-center"></td><td class="border border-black p-2 italic pl-6">- Thuế nhà thầu <span data-bind="tyLeThueNhaThau"></span>%</td><td class="border border-black p-2 text-right italic"><span data-bind="thueNhaThau" data-format="vnd"></span></td></tr>
+                
+                <tr class="bg-red-50 text-red-900 border-t-2 border-black">
+                    <td class="border border-black p-3 text-center font-bold text-lg">8</td>
+                    <td class="border border-black p-3 font-bold text-lg">TỔNG CHI PHÍ</td>
+                    <td class="border border-black p-3 text-right font-bold text-xl"><span data-bind="tongChiPhi" data-format="vnd"></span></td>
+                </tr>
+                <tr class="bg-green-50 text-green-800">
+                    <td class="border border-black p-3 text-center font-bold text-lg">9</td>
+                    <td class="border border-black p-3 font-bold text-lg">Tích lũy phát triển chương trình</td>
+                    <td class="border border-black p-3 text-right font-bold text-xl"><span data-bind="tichLuy" data-format="vnd"></span></td>
+                </tr>
+                <tr class="bg-blue-600 text-white !print:bg-transparent !print:text-black">
+                    <td class="border border-black p-4 text-center font-bold text-xl !print:text-black">10</td>
+                    <td class="border border-black p-4 font-bold text-xl !print:text-black">GIÁ DỊCH VỤ MỤC TIÊU (10) = (8) + (9)</td>
+                    <td class="border border-black p-4 text-right font-bold text-2xl !print:text-black">
+                        <input type="number" id="inp_giaDichVuMucTieu" class="w-full text-right bg-blue-700 border-b-2 border-dashed border-white text-white outline-none focus:bg-blue-800 print:bg-transparent print:border-none print:text-black px-1 py-1 target-input" value="9000000">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="mb-2 text-justify">Giá dịch vụ đào tạo <b><span data-bind="giaDichVuMucTieu" data-format="vnd"></span></b> đồng là mức thu của một môn học cho một học viên tham gia học. Quy mô lớp tối thiểu đảm bảo là <span data-bind="quyMoToiThieu"></span> học viên. Học viên tham gia bao nhiêu môn thì sẽ đóng với số tiền tương ứng số môn nhân với <span data-bind="giaDichVuMucTieu" data-format="vnd"></span> đồng/môn.</p>
+        <p class="mb-8 italic text-sm text-justify">Ghi chú: Tỷ lệ tích lũy được xác định nhằm đảm bảo bù đắp rủi ro, chi phí phát sinh và tạo nguồn tái đầu tư nâng cao chất lượng đào tạo.</p>
+
+        <!-- NGUYÊN TẮC ÁP DỤNG -->
+        <h2 class="font-bold uppercase mb-2">VI. NGUYÊN TẮC ÁP DỤNG</h2>
+        <ul class="list-disc pl-6 mb-16 space-y-1">
+            <li>Định mức được xác định cho 01 học viên.</li>
+            <li>Định mức được xây dựng trên cơ sở: Số liệu thực tế; hoặc So sánh, tham chiếu định mức tương đương.</li>
+            <li>Đơn giá dịch vụ của từng chương trình đào tạo sẽ do đơn vị tổ chức tự xác định vụ đảm bảo nguyên tắc tính đúng, tính đủ theo quy định hiện hành.</li>
+        </ul>
+
+        <!-- Chữ ký -->
+        <div class="grid grid-cols-2 text-center font-bold pb-20 break-inside-avoid">
+            <div>
+                <p class="mb-24">Ý KIẾN PHÒNG TÀI CHÍNH KẾ TOÁN</p>
+                <p>...........................................................</p>
+            </div>
+            <div>
+                <p class="mb-24">ĐƠN VỊ CHỦ TRÌ CHƯƠNG TRÌNH</p>
+                <p>...........................................................</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Javascript -->
+    <script>
+        // Khởi tạo Icon
+        lucide.createIcons();
+
+        // Hàm format số
+        const fNum = (num) => Number(num).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+        const fVND = (num) => Math.round(num).toLocaleString('vi-VN');
+
+        // Hàm lấy giá trị từ input
+        const getVal = (id) => {
+            const el = document.getElementById('inp_' + id);
+            return el ? parseFloat(el.value) || 0 : 0;
+        };
+
+        // Hàm cập nhật tất cả toán học
+        function calculate() {
+            // Lấy inputs
+            const HV = getVal('quyMoTieuChuan') || 1; // tránh chia cho 0
+            const quyMoToiThieu = getVal('quyMoToiThieu');
+            const gioXayDung = getVal('gioXayDung');
+            const gioGiangDay = getVal('gioGiangDay');
+            const gioRaDe = getVal('gioRaDe');
+            const gioCoiThi = getVal('gioCoiThi');
+            
+            const tyLeGianTiep = getVal('tyLeGianTiep');
+            const tyLeCSVCChung = getVal('tyLeCSVCChung');
+            
+            const gioDungMayChieu = getVal('gioDungMayChieu');
+            const gioDungMayTinh = getVal('gioDungMayTinh');
+            const gioDungThietBiHoTro = getVal('gioDungThietBiHoTro');
+            
+            const gioDienTichQuanLy = getVal('gioDienTichQuanLy');
+            const dmDienTichQuanLy = getVal('dmDienTichQuanLy');
+            const gioDienTichLyThuyet = getVal('gioDienTichLyThuyet');
+            const dmDienTichLyThuyet = getVal('dmDienTichLyThuyet');
+            const gioDienTichThi = getVal('gioDienTichThi');
+            const dmDienTichThi = getVal('dmDienTichThi');
+
+            const giaGiangDay = getVal('giaGiangDay');
+            const giaKhaoThi = getVal('giaKhaoThi');
+            const giaGianTiep = getVal('giaGianTiep');
+            const giaThietBi = getVal('giaThietBi');
+            const giaTaiLieu = getVal('giaTaiLieu');
+            const giaDienNuoc = getVal('giaDienNuoc');
+            const giaCSVC = getVal('giaCSVC');
+
+            const chiPhiDoiTac = getVal('chiPhiDoiTac');
+            const tyLeDoiTac = getVal('tyLeDoiTac');
+            const tyLeQuanLyNEU = getVal('tyLeQuanLyNEU');
+            const tyLeThueTNDN = getVal('tyLeThueTNDN');
+            const tyLeThueNhaThau = getVal('tyLeThueNhaThau');
+            const giaDichVuMucTieu = getVal('giaDichVuMucTieu');
+
+            // Tính toán Logic
+            const tongGioTrucTiep = gioXayDung + gioGiangDay + gioRaDe + gioCoiThi;
+            const tongGioGianTiep = tongGioTrucTiep * (tyLeGianTiep / 100);
+
+            const dmXayDung = gioXayDung / HV;
+            const dmGiangDay = gioGiangDay / HV;
+            const dmRaDe = gioRaDe / HV;
+            const dmCoiThi = gioCoiThi / HV;
+            const dmTrucTiepP1 = dmXayDung + dmGiangDay;
+            const dmTrucTiepP2 = dmRaDe + dmCoiThi;
+            const dmTrucTiep = tongGioTrucTiep / HV;
+            const dmGianTiep = tongGioGianTiep / HV;
+            const dmTongLaoDong = dmTrucTiep + dmGianTiep;
+
+            const dmMayChieu = gioDungMayChieu / HV;
+            const dmMayTinh = gioDungMayTinh / HV;
+            const dmTbHoTro = gioDungThietBiHoTro / HV;
+            const dmTongThietBi = dmMayChieu + dmMayTinh + dmTbHoTro;
+            const tongGioThietBi = gioDungMayChieu + gioDungMayTinh + gioDungThietBiHoTro;
+
+            const csvcQuanLy = gioDienTichQuanLy * dmDienTichQuanLy;
+            const csvcLyThuyet = gioDienTichLyThuyet * dmDienTichLyThuyet;
+            const csvcThi = gioDienTichThi * dmDienTichThi;
+            const csvcChung = (csvcQuanLy + csvcLyThuyet + csvcThi) * (tyLeCSVCChung / 100);
+            const tongCSVC = csvcQuanLy + csvcLyThuyet + csvcThi + csvcChung;
+            
+            const dmCsvcQuanLy = csvcQuanLy / HV;
+            const dmCsvcLyThuyet = csvcLyThuyet / HV;
+            const dmCsvcThi = csvcThi / HV;
+            const dmCsvcChung = csvcChung / HV;
+            const dmTongCSVC = tongCSVC / HV;
+
+            const tienXayDungGiangDay = dmTrucTiepP1 * giaGiangDay;
+            const tienRaDeCoiThi = dmTrucTiepP2 * giaKhaoThi;
+            const tienTrucTiep = tienXayDungGiangDay + tienRaDeCoiThi;
+            const tienGianTiep = dmGianTiep * giaGianTiep;
+            const tongTienLaoDong = tienTrucTiep + tienGianTiep;
+
+            const tienThietBi = dmTongThietBi * giaThietBi;
+            const tongVatTu = giaTaiLieu + giaDienNuoc;
+            const tienCSVC = dmTongCSVC * giaCSVC;
+
+            const tyLeNEU = 100 - tyLeDoiTac;
+            const phanDoiUngNEU = chiPhiDoiTac * (tyLeNEU / tyLeDoiTac);
+            const tienQuanLyNEU = phanDoiUngNEU * (tyLeQuanLyNEU / 100);
+            
+            const thueNhaThau = chiPhiDoiTac * (tyLeThueNhaThau / 100);
+            const thueTNDN = giaDichVuMucTieu * (tyLeThueTNDN / 100);
+            const tongThuePhi = thueTNDN + thueNhaThau;
+
+            const tongChiPhi = tongTienLaoDong + tienThietBi + tongVatTu + tienCSVC + tienQuanLyNEU + chiPhiDoiTac + thueNhaThau + thueTNDN;
+            
+            const tichLuy = giaDichVuMucTieu - tongChiPhi;
+
+            // Đóng gói data
+            const calcData = {
+                HV, quyMoToiThieu, gioXayDung, gioGiangDay, gioRaDe, gioCoiThi,
+                tongGioTrucTiep, tyLeGianTiep, tongGioGianTiep,
+                dmXayDung, dmGiangDay, dmRaDe, dmCoiThi, dmTrucTiepP1, dmTrucTiepP2, dmTrucTiep, dmGianTiep, dmTongLaoDong,
+                dmMayChieu, dmMayTinh, dmTbHoTro, dmTongThietBi, tongGioThietBi,
+                csvcQuanLy, csvcLyThuyet, csvcThi, tyLeCSVCChung, csvcChung, tongCSVC,
+                dmCsvcQuanLy, dmCsvcLyThuyet, dmCsvcThi, dmCsvcChung, dmTongCSVC,
+                tienXayDungGiangDay, tienRaDeCoiThi, tienTrucTiep, tienGianTiep, tongTienLaoDong,
+                tienThietBi, tongVatTu, tienCSVC, 
+                chiPhiDoiTac, tyLeDoiTac, tyLeNEU, tyLeQuanLyNEU, tienQuanLyNEU, 
+                tyLeThueTNDN, tyLeThueNhaThau, thueNhaThau, thueTNDN, tongThuePhi,
+                tongChiPhi, tichLuy, giaDichVuMucTieu
+            };
+
+            // Render ra màn hình
+            document.querySelectorAll('[data-bind]').forEach(el => {
+                const key = el.getAttribute('data-bind');
+                const format = el.getAttribute('data-format');
+                let val = calcData[key];
+                
+                if (val !== undefined && !isNaN(val)) {
+                    if (format === 'vnd') val = fVND(val);
+                    else if (format === 'num') val = fNum(val);
+                    el.textContent = val;
+                }
+            });
+        }
+
+        // Gắn sự kiện thay đổi cho tất cả các input
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Chạy lần đầu khi load web
+        calculate();
+
+    </script>
+</body>
+</html>
+
+```
